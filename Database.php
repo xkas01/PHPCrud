@@ -26,7 +26,7 @@ class Database
     }
 
     //Function to insert into the database
-    public function insert()
+    public function insert($table, $params = [])
     {
 
     }
@@ -47,6 +47,20 @@ class Database
     public function select()
     {
 
+    }
+
+    private function tableExists($table)
+    {
+        $sql = "show tables from $this->db_name like '$table'";
+        $tableInDb = $this->mysqli->query($sql);
+        if ($tableInDb) {
+            if ($tableInDb->num_rows == 1) {
+                return true;
+            } else {
+                array_push($this->result, $table . " does not exist in this database");
+                return false;
+            }
+        }
     }
 
     //close connection
