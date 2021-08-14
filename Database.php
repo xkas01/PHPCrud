@@ -28,7 +28,23 @@ class Database
     //Function to insert into the database
     public function insert($table, $params = [])
     {
+        if ($this->tableExists($table)) {
 
+            $table_columns = implode(', ', array_keys($params));
+            $table_value = implode("', '", $params);
+
+            $sql = "insert into $table ($table_columns) values ('$table_value')";
+
+            if ($this->mysqli->query($sql)) {
+                array_push($this->result, $this->mysqli->insert_id);
+                return true;
+            } else {
+                array_push($this->result, $this->mysqli->error);
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     //Function to update row in database
