@@ -79,6 +79,13 @@ class Database
         }
     }
 
+    public function getResult()
+    {
+        $val = $this->result;
+        $this->result = [];
+        return $val;
+    }
+
     //close connection
     public function __destruct()
     {
