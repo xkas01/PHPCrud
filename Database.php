@@ -34,23 +34,39 @@ class Database
             $table_value = implode("', '", $params);
 
             $sql = "insert into $table ($table_columns) values ('$table_value')";
-
+            // Make the query to insert to the database
             if ($this->mysqli->query($sql)) {
                 array_push($this->result, $this->mysqli->insert_id);
-                return true;
+                return true; // The data has been inserted
             } else {
                 array_push($this->result, $this->mysqli->error);
-                return false;
+                return false; // The data has not been inserted
             }
         } else {
-            return false;
+            return false; // Table does not exist
         }
     }
 
     //Function to update row in database
-    public function update()
+    public function update($table, $params = [], $where = null)
     {
-
+        if ($this->tableExists($table)) {
+            $args = [];
+            foreach ($params as $key => $value) {
+                $args[] = "$key = '$value'";
+            }
+            $sql = "update $table set " . implode(', ', $args);
+            if ($where != null) {
+                $sql .= " where $where";
+            }
+            if ($this->mysqli->query($sql)) {
+                array_push($this->result, $this->mysqli->affected_rows);
+            } else {
+                array_push($this->result, $this->mysqli->error);
+            }
+        } else {
+            return false;
+        }
     }
 
     //Function to delete table or row(s) from database
