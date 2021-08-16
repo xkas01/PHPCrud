@@ -2,14 +2,14 @@
 
 class Database
 {
-    private $db_host = "localhost";
-    private $db_user = "root";
-    private $db_pass = "root";
-    private $db_name = "crud";
+    private string $db_host = "localhost";
+    private string $db_user = "root";
+    private string $db_pass = "root";
+    private string $db_name = "crud";
 
     private $mysqli = "";
-    private $result = [];
-    private $conn = false;
+    private array $result = [];
+    private bool $conn = false;
 
     public function __construct()
     {
@@ -26,7 +26,7 @@ class Database
     }
 
     //Function to insert into the database
-    public function insert($table, $params = [])
+    public function insert($table, $params = []): bool
     {
         if ($this->tableExists($table)) {
 
@@ -90,7 +90,7 @@ class Database
     }
 
     //Function to SELECT from the database
-    public function select($table, $rows = "*", $join = null, $where = null, $order = null, $limit = null)
+    public function select($table, $rows = "*", $join = null, $where = null, $order = null, $limit = null): bool
     {
         if ($this->tableExists($table)) {
             $sql = "select $rows from $table";
@@ -116,13 +116,14 @@ class Database
                 array_push($this->result, $this->mysqli->error);
                 return false;
             }
-            
+
         } else {
             return false;
         }
     }
 
-    public function sql($sql)
+    //Function to SQL from the database
+    public function sql($sql): bool
     {
         $query = $this->mysqli->query($sql);
 
@@ -135,6 +136,7 @@ class Database
         }
     }
 
+    //Function to SHOW from the database
     private function tableExists($table)
     {
         $sql = "show tables from $this->db_name like '$table'";
@@ -149,7 +151,8 @@ class Database
         }
     }
 
-    public function getResult()
+    //Function getResult
+    public function getResult(): array
     {
         $val = $this->result;
         $this->result = [];
